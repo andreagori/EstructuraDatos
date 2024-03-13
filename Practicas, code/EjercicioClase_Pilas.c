@@ -11,7 +11,7 @@ Modificaciones: 12/marzo/2024.
 
 // STRUCTS
 
-typedef struct numeros
+typedef struct numeros // este struct no es necesario, pero asi lo aprendere.
 {
     int numero;
 } Numeros;
@@ -41,7 +41,6 @@ void insertar(Pila *pilita, Numeros digito);
 void eliminarPilita(Pila *pilita);
 Pila topPila(Pila *pilita);
 int longitudPila(Pila *pilita);
-
 int vacia();
 
 int main()
@@ -58,7 +57,8 @@ int msgs()
     printf("[2] Eliminar\n");
     printf("[3] Mostrar top de la pila\n");
     printf("[4] Mostrar longitud de la pila\n");
-    printf("[5] Salir\n");
+    printf("[5] Pila vacia?\n");
+    printf("[6] Salir\n");
     scanf("%d", &opc);
     return opc;
 }
@@ -94,6 +94,7 @@ void menu()
                 while (getchar() != '\n')
                     ;
             }
+            system("PAUSE");
             system("CLS");
             break;
         }
@@ -102,6 +103,7 @@ void menu()
             printf("Eliminar\n");
             eliminarPilita(pilita); // eliminar el ultimo nodo agregado, el top.
             printf("El elemento ha sido eliminado\n");
+            system("PAUSE");
             system("CLS");
             break;
         }
@@ -109,6 +111,7 @@ void menu()
         {
             printf("Mostrar el top de la pila\n");
             topPila(pilita);
+            system("PAUSE");
             system("CLS");
             break;
         }
@@ -116,11 +119,21 @@ void menu()
         {
             printf("Longitud de la pila\n");
             longitudPila(pilita);
+            system("PAUSE");
             system("CLS");
             break;
         }
+        case 5:
+        {
+            printf("La pila esta vacia?\n");
+            vacia(pilita);
+            system("PAUSE");
+            system("CLS");
+            break;
         }
-    } while (op != 5);
+            destruirPila(pilita);
+        }
+    } while (op != 6);
 }
 
 // FUNCIONES
