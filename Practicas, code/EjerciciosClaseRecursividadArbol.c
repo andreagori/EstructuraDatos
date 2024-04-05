@@ -93,6 +93,16 @@ void inorden(struct Nodo *arbol)
     }
 }
 
+int contarNodos(struct Nodo *arbol)
+{
+    if (arbol == NULL)
+    {
+        return 0;
+    }
+
+    return contarNodos(arbol->izquierdoPtr) + contarNodos(arbol->derechaPtr) + 1;
+}
+
 int contarHojas(struct Nodo *arbol)
 {
     // siempre poner validacion primero.
@@ -158,7 +168,23 @@ bool esLleno(struct Nodo *arbol)
         return false;
     }
 }
+/*
+Un arbol completo es el cual donde esta mas apoyado en el arbol izquierdo.
+*/
+bool completo(struct Nodo *arbol)
+{
+    if (arbol == NULL)
+    {
+        return true;
+    }
+    // Usare las otras funciones que hice para saber si el arbol esta completo.
+    int altura = alturaArbol(arbol);
+    int nodos = contarNodos(arbol);
 
+    // Formula que te ayuda a revisar si el arbol esta completo de acuerdo a su altura y nodos totales.
+    return nodos == (1 << altura) - 1; // (2^h - 1) El desplazamiento de bits se utiliza para calcular 2^h., dos elevado a la altura del arbol menos 1.
+    //
+};
 /*
 Un árbol binario está completo si todos sus niveles, excepto posiblemente el último, están completamente llenos, y todos los nodos del último nivel
 están lo más a la izquierda posible.
@@ -166,13 +192,19 @@ están lo más a la izquierda posible.
 
 int main()
 {
-    int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4};
-    int n = 8;
+    // Se esta insertando en orden BST. (arbol binario de busqueda), el orden de datos importa.
+    /*
+     todos los elementos en su subárbol izquierdo son menores que el nodo, y todos los
+     elementos en su subárbol derecho son mayores que el nodo.
+    */
+    // int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4};
+    int dato_completo[3] = {4, 2, 7};
+    int n = 3; // cambiar el n.
     int i;
-    struct Nodo *arbol = crearNodo(dato[0]);
+    struct Nodo *arbol = crearNodo(dato_completo[0]);
     for (i = 1; i < n; i++)
     {
-        insertar(arbol, dato[i]);
+        insertar(arbol, dato_completo[i]);
     }
     printf("Inorden\n");
     inorden(arbol);
@@ -182,15 +214,25 @@ int main()
     postorden(arbol);
     printf("Hojas del arbol: %d\n", contarHojas(arbol));
     printf("La altura del arbol es de: %d\n", alturaArbol(arbol));
-    // ultimas dos, no muy segura.
+    // Si el arbol esta lleno o no.
     if (esLleno(arbol))
     {
-        printf("El árbol está lleno.\n");
+        printf("El arbol esta lleno.\n");
     }
     else
     {
-        printf("El árbol no está lleno.\n");
+        printf("El arbol no esta lleno.\n");
     }
-    // completo era mucho rollo, no enteder.
+    // revisar el completo.
+    if (completo(arbol))
+    {
+        printf("El arbol esta completo.\n");
+    }
+    else
+    {
+        printf("El arbol no esta completo.\n");
+    }
+
+    free(arbol);
     return 0;
 }
