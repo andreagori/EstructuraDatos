@@ -22,7 +22,7 @@ struct Nodo *crearNodo(int dato)
     return nodo;
 };
 /*
-Para insertar del lado derecho, no haya nada. Si no hay nada ahi se insertara, si hay algo
+Para insertar del lado derecho, no halla nada. Si no hay nada ahi se insertara, si hay algo
 debo de avanzar y como avanzare, trabajare con un subarbol del lado derecho por tanto
 Primero el dato es mayor, que el dato que esta en el arbol? Si es positivo, se ira al lado
 derecho, ahora debemos saber si tienen hijos, si es diferente de NULL, se crea el
@@ -170,6 +170,8 @@ bool esLleno(struct Nodo *arbol)
 }
 /*
 Un arbol completo es el cual donde esta mas apoyado en el arbol izquierdo.
+Un árbol binario está completo si todos sus niveles, excepto posiblemente el último, están completamente llenos, y todos los nodos del último nivel
+están lo más a la izquierda posible.
 */
 bool completo(struct Nodo *arbol)
 {
@@ -183,12 +185,7 @@ bool completo(struct Nodo *arbol)
 
     // Formula que te ayuda a revisar si el arbol esta completo de acuerdo a su altura y nodos totales.
     return nodos == (1 << altura) - 1; // (2^h - 1) El desplazamiento de bits se utiliza para calcular 2^h., dos elevado a la altura del arbol menos 1.
-    //
 };
-/*
-Un árbol binario está completo si todos sus niveles, excepto posiblemente el último, están completamente llenos, y todos los nodos del último nivel
-están lo más a la izquierda posible.
-*/
 
 int main()
 {
