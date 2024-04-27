@@ -187,6 +187,85 @@ bool completo(struct Nodo *arbol)
     return nodos == (1 << altura) - 1; // (2^h - 1) El desplazamiento de bits se utiliza para calcular 2^h., dos elevado a la altura del arbol menos 1.
 };
 
+// Un arbol balanceado es aquel que tiene la misma cantidad de nodos en su subarbol izquierdo y derecho.
+bool arbolBalanceado(struct Nodo *arbol)
+{
+    // si la diferencia es mayor a 1, no esta balanceado. Y tambien si es menor a -1.
+    if (arbol == NULL)
+    {
+        return true;
+    }
+    int alturaIzq = alturaArbol(arbol->izquierdoPtr);
+    int alturaDer = alturaArbol(arbol->derechaPtr);
+
+    int diferencia = (alturaDer - alturaIzq);
+    if (diferencia > 1 || diferencia < -1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+    // return arbolBalanceado(arbol->izquierdoPtr) && arbolBalanceado(arbol->derechaPtr);
+}
+
+struct Nodo *EncontrarMinimo(struct Nodo *nodo)
+{
+    struct Nodo *actual = nodo;
+    while (actual->izquierdoPtr != NULL)
+    {
+        actual = actual->izquierdoPtr;
+    }
+    return actual;
+}
+
+struct Nodo *BorrarNodo(struct Nodo *nodo, int valor)
+{
+    if (nodo == NULL)
+    {
+        return nodo;
+    }
+    if (valor < nodo->dato)
+    {
+        nodo->izquierdoPtr = BorrarNodo(nodo->izquierdoPtr, valor);
+    }
+    else
+    {
+        if (valor > nodo->dato)
+        {
+            nodo->derechaPtr = BorrarNodo(nodo->derechaPtr, valor);
+        }
+        else
+        {
+            // caso 1: Un solo hijo o ningun hijo.
+            if (nodo->izquierdoPtr == NULL)
+            {
+                struct Nodo *temp = (struct Nodo *)malloc(sizeof(struct Nodo));
+                temp = nodo->derechaPtr;
+                free(nodo);
+                return temp;
+            }
+            else
+            {
+                if (nodo->derechaPtr == NULL)
+                {
+                    struct Nodo *temp = (struct Nodo *)malloc(sizeof(struct Nodo));
+                    temp = nodo->izquierdoPtr;
+                    free(nodo);
+                    return temp;
+                }
+            }
+            // caso 2: Dos hijos.
+            struct Nodo *temp = EncontrarMinimo(nodo->derechaPtr);
+            nodo->dato = temp->dato;
+            nodo->derechaPtr = BorrarNodo(nodo->derechaPtr, temp->dato);
+            
+        }
+    }
+    return nodo;
+}
+
 int main()
 {
     // Se esta insertando en orden BST. (arbol binario de busqueda), el orden de datos importa.
@@ -194,9 +273,9 @@ int main()
      todos los elementos en su subárbol izquierdo son menores que el nodo, y todos los
      elementos en su subárbol derecho son mayores que el nodo.
     */
-    // int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4};
-    int dato_completo[3] = {4, 2, 7};
-    int n = 3; // cambiar el n.
+    // int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4};4, 2, 7 | 1, 2, 3, 4, 5
+    int dato_completo[8] = {8, 3, 1, 20, 5, 10, 7, 4};
+    int n = 8; // cambiar el n.
     int i;
     struct Nodo *arbol = crearNodo(dato_completo[0]);
     for (i = 1; i < n; i++)
@@ -229,6 +308,19 @@ int main()
     {
         printf("El arbol no esta completo.\n");
     }
+    // Revisar si el arbol esta balanceado.
+    if (arbolBalanceado(arbol))
+    {
+        printf("El arbol esta balanceado.\n");
+    }
+    else
+    {
+        printf("El arbol no esta balanceado.\n");
+    }
+    // Borrar un nodo.
+    arbol = BorrarNodo(arbol, 20);
+    printf("Inorden\n");
+    inorden(arbol);
 
     free(arbol);
     return 0;
