@@ -26,6 +26,7 @@ typedef struct Cola
 void enqueue(Cola *colita, int numeros);
 int dequeue(Cola *colita);
 int peek(Cola *colita);
+void printColita(Cola *colita);
 
 // FUNCIONES ----------------------------------------------------
 // crear nodo en cola.
