@@ -36,12 +36,13 @@ Pila *crearPila();
 void destruirPila(Pila *pila);
 Nodo *crearNodo(Numeros digito);
 void destruirNodo(Nodo *nodo);
-
+// FUNCIONES DEL MENU
 void insertar(Pila *pilita, Numeros digito);
 void eliminarPilita(Pila *pilita);
 Pila topPila(Pila *pilita);
 int longitudPila(Pila *pilita);
 int vacia();
+void mostrarPila(Pila *pilita);
 
 int main()
 {
@@ -52,13 +53,15 @@ int main()
 int msgs()
 {
     int opc;
+    system("CLS");
     printf("----- MENU -----\n");
     printf("[1] Insertar\n");
     printf("[2] Eliminar\n");
     printf("[3] Mostrar top de la pila\n");
     printf("[4] Mostrar longitud de la pila\n");
-    printf("[5] Pila vacia?\n");
-    printf("[6] Salir\n");
+    printf("[5] Verificar si la pila esta vacia\n");
+    printf("[6] Mostrar elementos de la pila\n");
+    printf("[7] Salir\n");
     scanf("%d", &opc);
     return opc;
 }
@@ -66,7 +69,7 @@ int msgs()
 void menu()
 {
     int op;
-    Pila *pilita = crearPila();
+    Pila *pilita = crearPila(); // CREA UNA PILA AUTOMATICAMENTE, PERO ESTA VACIA
 
     do
     {
@@ -95,7 +98,6 @@ void menu()
                     ;
             }
             system("PAUSE");
-            system("CLS");
             break;
         }
         case 2:
@@ -104,7 +106,6 @@ void menu()
             eliminarPilita(pilita); // eliminar el ultimo nodo agregado, el top.
             printf("El elemento ha sido eliminado\n");
             system("PAUSE");
-            system("CLS");
             break;
         }
         case 3:
@@ -112,7 +113,6 @@ void menu()
             printf("Mostrar el top de la pila\n");
             topPila(pilita);
             system("PAUSE");
-            system("CLS");
             break;
         }
         case 4:
@@ -120,7 +120,6 @@ void menu()
             printf("Longitud de la pila\n");
             longitudPila(pilita);
             system("PAUSE");
-            system("CLS");
             break;
         }
         case 5:
@@ -131,9 +130,16 @@ void menu()
             system("CLS");
             break;
         }
+        case 6:
+        {
+            printf("Mostrar elementos de la pila\n");
+            mostrarPila(pilita);
+            system("PAUSE");
+            break;
+        }
             destruirPila(pilita);
         }
-    } while (op != 6);
+    } while (op != 7);
 }
 
 // FUNCIONES
@@ -168,7 +174,7 @@ void destruirNodo(Nodo *nodo)
     nodo->siguiente = NULL;
     free(nodo);
 }
-
+// astigmatismo
 void insertar(Pila *pilita, Numeros digito)
 {
     Nodo *elemento = crearNodo(digito);
@@ -210,19 +216,28 @@ Pila topPila(Pila *pilita)
 
 int longitudPila(Pila *pilita)
 {
-    printf("La longitud de tu pila es:%d\n", pilita->longitud);
+    printf("La longitud de tu pila es: %d\n", pilita->longitud);
     return pilita->longitud;
 }
 
 int vacia(Pila *pilita)
 {
-    if (pilita->longitud != 0)
-    {
-        printf("Tu pila no esta vacia y tiene %d\n", pilita->longitud);
-    }
-    else
+    if (pilita->longitud == 0)
     {
         printf("Tu pila esta vacia\n");
         return pilita->longitud == 0;
+    }
+
+    printf("Tu pila no esta vacia y tiene una longitud de: %d\n", pilita->longitud);
+    return pilita->longitud;
+}
+
+void mostrarPila(Pila *pilita)
+{
+    Nodo *aux = pilita->frente;
+    while (aux != NULL)
+    {
+        printf("%d\n", aux->dato->numero);
+        aux = aux->siguiente;
     }
 }
