@@ -220,6 +220,20 @@ struct Nodo *EncontrarMinimo(struct Nodo *nodo)
     return actual;
 }
 
+struct Nodo *buscar(struct Nodo *nodo, int valor)
+{
+    // Si la raíz es NULL o el valor de la raíz es el valor que estamos buscando
+    if (nodo == NULL || nodo->dato == valor)
+        return nodo;
+
+    // Si el valor que estamos buscando es mayor que el valor de la raíz, entonces el valor debe estar en el subárbol derecho
+    if (nodo->dato < valor)
+        return buscar(nodo->derechaPtr, valor);
+
+    // De lo contrario, el valor debe estar en el subárbol izquierdo
+    return buscar(nodo->izquierdoPtr, valor);
+}
+
 struct Nodo *BorrarNodo(struct Nodo *nodo, int valor)
 {
     if (nodo == NULL)
@@ -260,68 +274,247 @@ struct Nodo *BorrarNodo(struct Nodo *nodo, int valor)
             struct Nodo *temp = EncontrarMinimo(nodo->derechaPtr);
             nodo->dato = temp->dato;
             nodo->derechaPtr = BorrarNodo(nodo->derechaPtr, temp->dato);
-            
         }
     }
     return nodo;
 }
 
-int main()
+void liberarArbol(struct Nodo *nodo)
 {
+    if (nodo == NULL)
+        return;
+
+    // Primero liberar los subárboles
+    liberarArbol(nodo->izquierdoPtr);
+    liberarArbol(nodo->derechaPtr);
+
+    // Luego liberar el nodo
+    free(nodo);
+}
+
+int msjs()
+{
+    int op;
+    system("CLS");
+    printf("------ MENU ------\n ");
+    printf("[1] Insertar nodo en una posicion especifica de un arbol.\n ");
+    printf("[2] Buscar un nodo en el arbol.\n ");
+    printf("[3] Borrar un nodo en el arbol.\n ");
+    printf("[4] Recorrer el arbol en un orden especifico (inorden, preorden, postorden).\n ");
+    printf("[5] Verificar si el arbol esta lleno.\n ");
+    printf("[6] Verificar si el arbol esta completo.\n ");
+    printf("[7] Verificar si el arbol esta balanceado.\n ");
+    printf("[8] Modificar el valor de un nodo.\n ");
+    printf("[9] Salir.\n ");
+    printf("Seleccione una opcion: \n");
+    scanf("%d", &op);
+    return op;
+}
+
+void menu()
+{
+    struct Nodo *arbol = NULL; // inicializar el arbol.
+    int op;
+    do
+    {
+        op = msjs();
+        switch (op)
+        {
+        case 1:
+        {
+            int n;
+            printf("Ingrese el numero de elementos: ");
+            scanf("%d", &n);
+
+            int dato_completo[n];
+            printf("Ingrese los %d elementos:\n", n);
+            for (int i = 0; i < n; i++)
+            {
+                scanf("%d", &dato_completo[i]);
+            }
+
+            arbol = crearNodo(dato_completo[0]);
+            for (int i = 1; i < n; i++)
+            {
+                insertar(arbol, dato_completo[i]);
+            }
+            system("PAUSE");
+            break;
+        }
+        case 2:
+        {
+            // Buscar un nodo en el arbol.
+            int valor;
+            printf("Ingrese el valor del nodo a buscar: ");
+            scanf("%d", &valor);
+            struct Nodo *nodo = buscar(arbol, valor);
+            if (nodo != NULL)
+            {
+                printf("Nodo encontrado: %d\n", nodo->dato);
+            }
+            else
+            {
+                printf("Nodo no encontrado.\n");
+            }
+            system("PAUSE");
+            break;
+        }
+        case 3:
+        {
+            // Borrar un nodo en el arbol.
+            int nodo;
+            printf("escribe el elemento que deseas borrar: \n");
+            scanf("%d", &nodo);
+            arbol = BorrarNodo(arbol, nodo);
+            system("PAUSE");
+            break;
+        }
+        case 4:
+        {
+            // Recorrer el arbol en un orden especifico (inorden, preorden, postorden).
+            printf("Inorden\n");
+            inorden(arbol);
+            printf("Preorden\n");
+            preOrden(arbol);
+            printf("Postorden\n");
+            postorden(arbol);
+            system("PAUSE");
+            break;
+        }
+        case 5:
+        {
+            // Verificar si el arbol esta lleno.
+            if (esLleno(arbol))
+            {
+                printf("El arbol esta lleno.\n");
+            }
+            else
+            {
+                printf("El arbol no esta lleno.\n");
+            }
+            system("PAUSE");
+            break;
+        }
+        case 6:
+        {
+            // Verificar si el arbol esta completo.
+            if (completo(arbol))
+            {
+                printf("El arbol esta completo.\n");
+            }
+            else
+            {
+                printf("El arbol no esta completo.\n");
+            }
+            system("PAUSE");
+            break;
+        }
+        case 7:
+        {
+            // Verificar si el arbol esta balanceado.
+            if (arbolBalanceado(arbol))
+            {
+                printf("El arbol esta balanceado.\n");
+            }
+            else
+            {
+                printf("El arbol no esta balanceado.\n");
+            }
+            system("PAUSE");
+            break;
+        }
+        case 8:
+        {
+            // Modificar el valor de un nodo.
+            int nodoBuscar;
+            int nuevoValor;
+            printf("Ingrese el valor del nodo a buscar: ");
+            scanf("%d", &nodoBuscar);
+            struct Nodo *nodo = buscar(arbol, nodoBuscar);
+            if (nodo != NULL)
+            {
+                printf("Ingrese el nuevo valor del nodo: ");
+                scanf("%d", &nuevoValor);
+                nodo->dato = nuevoValor;
+            }
+            else
+            {
+                printf("Nodo no encontrado.\n");
+            }
+            system("PAUSE");
+            break;
+        }
+        case 9:
+        {
+            // Salir
+            printf("Saliendo...\n");
+            liberarArbol(arbol);
+            break;
+        }
+        }
+    } while (op != 9);
+}
+
+int main()
+
+{
+    menu();
+    return 0;
     // Se esta insertando en orden BST. (arbol binario de busqueda), el orden de datos importa.
     /*
      todos los elementos en su subárbol izquierdo son menores que el nodo, y todos los
      elementos en su subárbol derecho son mayores que el nodo.
     */
-    // int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4};4, 2, 7 | 1, 2, 3, 4, 5
-    int dato_completo[8] = {8, 3, 1, 20, 5, 10, 7, 4};
-    int n = 8; // cambiar el n.
-    int i;
-    struct Nodo *arbol = crearNodo(dato_completo[0]);
-    for (i = 1; i < n; i++)
-    {
-        insertar(arbol, dato_completo[i]);
-    }
-    printf("Inorden\n");
-    inorden(arbol);
-    printf("Preorden\n");
-    preOrden(arbol);
-    printf("Postorden\n");
-    postorden(arbol);
-    printf("Hojas del arbol: %d\n", contarHojas(arbol));
-    printf("La altura del arbol es de: %d\n", alturaArbol(arbol));
-    // Si el arbol esta lleno o no.
-    if (esLleno(arbol))
-    {
-        printf("El arbol esta lleno.\n");
-    }
-    else
-    {
-        printf("El arbol no esta lleno.\n");
-    }
-    // revisar el completo.
-    if (completo(arbol))
-    {
-        printf("El arbol esta completo.\n");
-    }
-    else
-    {
-        printf("El arbol no esta completo.\n");
-    }
-    // Revisar si el arbol esta balanceado.
-    if (arbolBalanceado(arbol))
-    {
-        printf("El arbol esta balanceado.\n");
-    }
-    else
-    {
-        printf("El arbol no esta balanceado.\n");
-    }
-    // Borrar un nodo.
-    arbol = BorrarNodo(arbol, 20);
-    printf("Inorden\n");
-    inorden(arbol);
+    // int dato[8] = {8, 3, 1, 20, 5, 10, 7, 4}; //4, 2, 7 | 1, 2, 3, 4, 5
 
-    free(arbol);
-    return 0;
+    // int dato_completo[8] = {8, 3, 1, 20, 5, 10, 7, 4};
+    // int n = 8; // cambiar el n.
+    // int i;
+    // struct Nodo *arbol = crearNodo(dato_completo[0]);
+    // for (i = 1; i < n; i++)
+    // {
+    //     insertar(arbol, dato_completo[i]);
+    // }
+    // printf("Inorden\n");
+    // inorden(arbol);
+    // printf("Preorden\n");
+    // preOrden(arbol);
+    // printf("Postorden\n");
+    // postorden(arbol);
+    // printf("Hojas del arbol: %d\n", contarHojas(arbol));
+    // printf("La altura del arbol es de: %d\n", alturaArbol(arbol));
+    // // Si el arbol esta lleno o no.
+    // if (esLleno(arbol))
+    // {
+    //     printf("El arbol esta lleno.\n");
+    // }
+    // else
+    // {
+    //     printf("El arbol no esta lleno.\n");
+    // }
+    // // revisar el completo.
+    // if (completo(arbol))
+    // {
+    //     printf("El arbol esta completo.\n");
+    // }
+    // else
+    // {
+    //     printf("El arbol no esta completo.\n");
+    // }
+    // // Revisar si el arbol esta balanceado.
+    // if (arbolBalanceado(arbol))
+    // {
+    //     printf("El arbol esta balanceado.\n");
+    // }
+    // else
+    // {
+    //     printf("El arbol no esta balanceado.\n");
+    // }
+    // // Borrar un nodo.
+    // arbol = BorrarNodo(arbol, 20);
+    // printf("Inorden\n");
+    // inorden(arbol);
+
+    // free(arbol);
+    // return 0;
 }
